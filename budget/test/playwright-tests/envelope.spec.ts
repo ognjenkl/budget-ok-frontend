@@ -15,7 +15,7 @@ test('successfully adds new Envelope entry', async ({ page }) => {
   await page.getByPlaceholder('Amount').fill('200');
 
   // Submit the form
-  await page.getByRole('button', { name: 'Add New Envelope' }).click();
+  await page.getByRole('button', { name: 'Submit' }).click();
 
   // Verify that the new envelope appears in the list
   const envelopeList = await page.locator('.envelope-list');
