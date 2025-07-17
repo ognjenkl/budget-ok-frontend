@@ -1,20 +1,18 @@
 import axios, { AxiosPromise } from 'axios';
+import CreateEnvelopeDto from "./create.envelope.dto.ts";
 
-export class DogService {
+export class EnvelopeService {
   private url: string;
   private port: number;
 
-  constructor(endpoint: any) {
+  constructor(endpoint: { url: string; port: number }) {
     this.url = endpoint.url;
     this.port = endpoint.port;
   }
 
-  public getMeDogs = (): AxiosPromise => {
-    return axios.request({
-      baseURL: `${this.url}:${this.port}`,
-      headers: { Accept: 'application/json' },
-      method: 'GET',
-      url: '/dogs',
-    });
+  public create = (createEnvelopeDto: CreateEnvelopeDto): AxiosPromise => {
+    const baseURL = `${this.url}:${this.port}`;
+    const fullUrl = `${baseURL}/envelopes`;
+    return axios.post( fullUrl, createEnvelopeDto);
   };
 }
