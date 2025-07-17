@@ -1,4 +1,4 @@
-import {Form} from "antd";
+import {Form, Input, InputNumber} from "antd";
 
 export default function CreateEnvelopeForm() {
   return (
@@ -8,7 +8,7 @@ export default function CreateEnvelopeForm() {
         label="Name"
         rules={[{ required: true, message: 'Please input the envelope name!' }]}
       >
-        <input placeholder="Envelope Name" />
+        <Input placeholder="Envelope Name" />
       </Form.Item>
 
       <Form.Item
@@ -16,7 +16,7 @@ export default function CreateEnvelopeForm() {
         label="Budget"
         rules={[{ required: true, message: 'Please input the budget amount!' }]}
       >
-        <input type="number" placeholder="Budget Amount" />
+        <InputNumber placeholder="Budget Amount" />
       </Form.Item>
 
       <Form.Item>
