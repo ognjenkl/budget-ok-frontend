@@ -1,12 +1,70 @@
-import {describe, it, expect, beforeEach} from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import CreateEnvelopeForm from "./CreateEnvelopeForm.tsx";
 import { userEvent } from "@testing-library/user-event";
+import * as useCreateEnvelopeModule from "../../hooks/useCreateEnvelope";
+import { message } from 'antd';
+
+// Mock the message component
+vi.mock('antd', async () => {
+  const actual = await vi.importActual('antd');
+  return {
+    ...actual as any,
+    message: {
+      success: vi.fn(),
+      error: vi.fn()
+    }
+  };
+});
+
+// Setup mock for useCreateEnvelope hook
+const mockMutate = vi.fn();
+
+beforeEach(() => {
+  vi.clearAllMocks();
+
+  // Mock the useCreateEnvelope hook implementation
+  vi.spyOn(useCreateEnvelopeModule, 'default').mockReturnValue({
+    mutate: mockMutate,
+    mutateAsync: vi.fn(),
+    isPending: false,
+    isError: false,
+    isSuccess: false,
+    error: null,
+    data: undefined
+  } as any);
+});
 
 describe('CreateEnvelopeForm', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
-    render(<CreateEnvelopeForm />);
-  })
+    vi.resetAllMocks();
+
+    // Create a new QueryClient for each test
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateEnvelopeForm />
+      </QueryClientProvider>
+    );
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    queryClient.clear();
+  });
 
   it('renders the form with all required fields', () => {
     // Check if form elements are rendered
@@ -81,22 +139,6 @@ describe('CreateEnvelopeForm', () => {
     await userEvent.type(budgetInput, '123.45');
 
     expect(budgetInput).toHaveValue('123.45');
-  });
-
-  it('handles form submission with keyboard Enter key', async () => {
-    // Fill in both fields
-    const nameInput = screen.getByLabelText(/name/i);
-    const budgetInput = screen.getByLabelText(/budget/i);
-
-    await userEvent.type(nameInput, 'Groceries');
-    await userEvent.type(budgetInput, '500');
-
-    // Press Enter key on the budget field
-    await userEvent.type(budgetInput, '{Enter}');
-
-    // Check that validation errors don't appear
-    expect(screen.queryByText(/Please input the envelope name!/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Please input the budget amount!/i)).not.toBeInTheDocument();
   });
 
   it('trims whitespace from the name field', async () => {

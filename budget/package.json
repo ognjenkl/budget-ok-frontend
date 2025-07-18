@@ -15,6 +15,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.83.0",
     "antd": "^5.26.5",
     "axios": "^1.10.0",
     "msw": "^2.10.4",
