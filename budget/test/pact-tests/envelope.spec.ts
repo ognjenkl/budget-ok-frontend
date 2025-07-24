@@ -4,13 +4,12 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import path from 'path';
 import sinonChai from 'sinon-chai';
-import { Pact, Interaction, Matchers, LogLevel } from '@pact-foundation/pact';
+import { Pact, Matchers, LogLevel } from '@pact-foundation/pact';
 
 const expect = chai.expect;
 import { EnvelopeService } from '../../src/api';
 import {before, describe} from "node:test";
 import CreateEnvelopeDto from "../../src/api/create.envelope.dto";
-const { eachLike } = Matchers;
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -46,8 +45,8 @@ describe('The Envelope API', () => {
   describe('post /envelopes using object pattern', () => {
     before(() => {
       const body: CreateEnvelopeDto = {
-        name: "Groceries",
-        budget: 100,
+        name: "Rent",
+        budget: 1200,
       }
 
       return provider.addInteraction({
@@ -73,8 +72,8 @@ describe('The Envelope API', () => {
 
     it('returns the correct response', async () => {
       const body: CreateEnvelopeDto = {
-        name: "Groceries",
-        budget: 100,
+        name: "Rent",
+        budget: 1200,
       }
       const res = await envelopeService.create(body);
       expect(res.data).to.deep.eq({

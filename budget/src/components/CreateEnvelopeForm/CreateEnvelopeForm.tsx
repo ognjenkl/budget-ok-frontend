@@ -1,50 +1,29 @@
-import { Form, Input, InputNumber } from "antd";
-import useCreateEnvelope from "../../hooks/useCreateEnvelope.ts";
+import {Button, Form, Input, InputNumber} from "antd";
+import useCreateEnvelope from "./useCreateEnvelope.ts";
 
-interface EnvelopeFormData {
+type CreateEnvelopeFormData = {
   name: string;
   budget: number;
 }
 
 export default function CreateEnvelopeForm() {
-  const [form] = Form.useForm<EnvelopeFormData>();
-  const { mutate, isPending } = useCreateEnvelope();
+  const {mutate, isPending} = useCreateEnvelope()
 
-  const handleSubmit = (values: EnvelopeFormData) => {
-    mutate(values, {
-      onSuccess: () => {
-        form.resetFields();
-      },
-    })
-  };
+  const onFinish = (values: CreateEnvelopeFormData) => {
+    mutate(values)
+  }
 
-  return (
-    <Form
-      form={form}
-      onFinish={handleSubmit}
-      data-testid="create-envelope-form"
-    >
-      <Form.Item
-        name="name"
-        label="Name"
-        rules={[{ required: true, message: 'Please input the envelope name!' }]}
-      >
-        <Input placeholder="Envelope Name" />
-      </Form.Item>
-
-      <Form.Item
-        name="budget"
-        label="Budget"
-        rules={[{ required: true, message: 'Please input the budget amount!' }]}
-      >
-        <InputNumber placeholder="Budget Amount" />
-      </Form.Item>
-
-      <Form.Item>
-        <button type="submit" disabled={isPending} data-testid="submit-button">
-          {isPending ? 'Submitting...' : 'Submit'}
-        </button>
-      </Form.Item>
-    </Form>
-  );
+  return <Form<CreateEnvelopeFormData> data-testid="create-envelope-form" layout="vertical" onFinish={onFinish}>
+    <Form.Item name="name" label="Envelope Name" rules={[{required: true, message: 'Please input the envelope name!'}]}>
+      <Input placeholder="Name"/>
+    </Form.Item>
+    <Form.Item name="budget" label="Budget" rules={[{required: true, message: 'Please input the budget amount!'}]}>
+      <InputNumber placeholder="Budget"/>
+    </Form.Item>
+    <Form.Item>
+      <Button type="primary" htmlType="submit" loading={isPending} disabled={isPending}>
+        Submit
+      </Button>
+    </Form.Item>
+  </Form>
 }

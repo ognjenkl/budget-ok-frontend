@@ -8,8 +8,8 @@
       "providerState": "i have a list of envelopes",
       "request": {
         "body": {
-          "budget": 100,
-          "name": "Groceries"
+          "budget": 1200,
+          "name": "Rent"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -19,9 +19,9 @@
       },
       "response": {
         "body": {
-          "budget": 100,
+          "budget": 1200,
           "id": 1,
-          "name": "Groceries"
+          "name": "Rent"
         },
         "headers": {
           "Content-Type": "application/json"
