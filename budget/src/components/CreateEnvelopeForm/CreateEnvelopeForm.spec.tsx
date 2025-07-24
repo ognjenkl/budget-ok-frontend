@@ -221,6 +221,24 @@ describe('CreateEnvelopeForm', () => {
       });
     });
 
+    it('handles network error and shows error message', async () => {
+      server.use(
+        http.post(apiUrl, () => {
+          return HttpResponse.error()
+        })
+      );
+
+      const nameInput = screen.getByLabelText(/name/i);
+      const budgetInput = screen.getByLabelText(/budget/i);
+
+      await user.type(nameInput, 'Network Test');
+      await user.type(budgetInput, '300');
+      await user.click(screen.getByRole('button', { name: /submit/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Network error, please try again later!')).toBeInTheDocument();
+      });
+    });
   });
 
   describe('Loading States', () => {
