@@ -15,7 +15,7 @@
           "Content-Type": "application/json"
         },
         "method": "POST",
-        "path": "/envelopes"
+        "path": "/api/envelopes"
       },
       "response": {
         "body": {

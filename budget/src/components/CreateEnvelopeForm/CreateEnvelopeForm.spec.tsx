@@ -8,10 +8,15 @@ import CreateEnvelopeForm from './CreateEnvelopeForm';
 import type CreateEnvelopeDto from '../../api/create.envelope.dto';
 import type CreateEnvelopeResponse from '../../api/create.envelope.response';
 
+// Load environment variables
+// const env = loadEnv('test', process.cwd(), '');
+const baseUrl = 'http://localhost';
+const apiPort = '8090';
+
 describe('CreateEnvelopeForm', () => {
   let queryClient: QueryClient;
   let user: ReturnType<typeof userEvent.setup>;
-  const apiUrl = 'http://localhost:8090/envelopes';
+  const apiUrl = `${baseUrl}:${apiPort}/api/envelopes`;
 
   beforeEach(() => {
     vi.clearAllMocks();
