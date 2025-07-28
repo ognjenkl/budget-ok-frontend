@@ -20,11 +20,4 @@ test('successfully adds new Envelope entry', async ({ page }) => {
   const successMessageText = 'Envelope created successfully!';
   // Verify success message appears
   await expect(page.getByText(successMessageText)).toBeVisible();
-
-  // // Verify that the new envelope appears on the screen
-  // const envelopeName = page.getByText('Rent');
-  // await expect(envelopeName).toBeVisible();
-  //
-  // const envelopeBudget = page.getByText('$1200');
-  // await expect(envelopeBudget).toBeVisible();
 })

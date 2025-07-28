@@ -9,8 +9,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test:acceptance": "playwright test",
-    "test:contract": "vitest run --config vitest.contract.config.ts",
-    "test:component:unit": "vitest run",
+    "test:contract": "vitest run --config vitest.contract.config.ts --mode contract",
+    "test:component:unit": "vitest run --mode test",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
