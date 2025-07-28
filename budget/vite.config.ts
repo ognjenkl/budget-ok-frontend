@@ -12,7 +12,8 @@ export default defineConfig({
     setupFiles: ['./test/setup.ts'],
     css: true,
     exclude: ['**/node_modules/**', '**/test/contract/**', '**/test/acceptance/**'],
-  },server: {
+  },
+  server: {
     proxy: {
       '/api': {
         target: apiUrl,

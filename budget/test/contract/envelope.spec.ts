@@ -6,18 +6,11 @@ const apiPort = 8090;
 process.env.VITE_API_URL = 'http://localhost';
 process.env.VITE_API_PORT = apiPort.toString();
 
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import path from 'path';
-import sinonChai from 'sinon-chai';
 import { Pact, Matchers, LogLevel } from '@pact-foundation/pact';
-import { describe, before, after, afterEach, it } from 'mocha';
+import { describe, beforeAll, afterAll, afterEach, it, expect } from 'vitest';
 import CreateEnvelopeDto from "../../src/api/create.envelope.dto";
 import createEnvelope from "../../src/api/createEnvelope.ts";
-
-const expect = chai.expect;
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('The Envelope API', () => {
@@ -32,11 +25,11 @@ describe('The Envelope API', () => {
     port: apiPort,
   });
 
-  before(async () => {
+  beforeAll(async () => {
     await provider.setup();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await provider.finalize();
   });
 
@@ -45,7 +38,7 @@ describe('The Envelope API', () => {
   });
 
   describe('post /api/envelopes using object pattern', () => {
-    before(async () => {
+    beforeAll(async () => {
       const body: CreateEnvelopeDto = {
         name: "Rent",
         budget: 1200,
