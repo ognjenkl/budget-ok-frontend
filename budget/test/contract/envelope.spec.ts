@@ -1,17 +1,15 @@
 
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 
-// Set environment variables BEFORE importing any modules that use them
-const apiPort = 8090;
-process.env.VITE_API_URL = 'http://localhost';
-process.env.VITE_API_PORT = apiPort.toString();
+// Configuration for contract tests - using import.meta.env values set in vitest.contract.config.ts
+const apiPort = parseInt(import.meta.env.VITE_API_PORT || '8090');
 
 import path from 'path';
 import { Pact, Matchers, LogLevel } from '@pact-foundation/pact';
 import { describe, beforeAll, afterAll, afterEach, it, expect } from 'vitest';
 import CreateEnvelopeDto from "../../src/api/create.envelope.dto";
 import createEnvelope from "../../src/api/createEnvelope.ts";
-const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
+const LOG_LEVEL = import.meta.env.LOG_LEVEL || 'TRACE';
 
 describe('The Envelope API', () => {
   const provider = new Pact({
