@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test:acceptance": "playwright test",
     "test:contract": "vitest run --config vitest.contract.config.ts --mode contract",
-    "test:component:unit": "vitest run --mode test",
+    "test:unit": "vitest run --mode test --reporter=verbose src/",
+    "test:component": "vitest run --mode test --reporter=verbose test/component/",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
