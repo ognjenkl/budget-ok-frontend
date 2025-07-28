@@ -1,5 +1,5 @@
 import {Button, Form, Input, InputNumber} from "antd";
-import useCreateEnvelope from "./useCreateEnvelope.ts";
+import useCreateEnvelope from "../../hooks/useCreateEnvelope.ts";
 
 type CreateEnvelopeFormData = {
   name: string;

@@ -1,11 +1,8 @@
 /// <reference types="vitest" />
-import {defineConfig, loadEnv} from 'vite'
+import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 
-const env = loadEnv('', process.cwd());
-const url = env.VITE_API_URL;
-const port = env.VITE_API_PORT;
-const apiUrl = `${url}:${port}/api`;
+const apiUrl = `http://localhost:8090/api`;
 
 export default defineConfig({
   plugins: [react()],
@@ -14,7 +11,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./test/setup.ts'],
     css: true,
-    exclude: ['**/node_modules/**', '**/test/pact-tests/**', '**/test/playwright-tests/**'],
+    exclude: ['**/node_modules/**', '**/test/contract/**', '**/test/acceptance/**'],
   },server: {
     proxy: {
       '/api': {

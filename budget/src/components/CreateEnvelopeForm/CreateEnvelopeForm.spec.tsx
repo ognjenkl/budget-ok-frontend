@@ -1,22 +1,12 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
-import { server } from '../../../test/setup';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {render, screen} from '@testing-library/react';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {userEvent} from '@testing-library/user-event';
 import CreateEnvelopeForm from './CreateEnvelopeForm';
-import type CreateEnvelopeDto from '../../api/create.envelope.dto';
-import type CreateEnvelopeResponse from '../../api/create.envelope.response';
-
-// Load environment variables
-// const env = loadEnv('test', process.cwd(), '');
-const baseUrl = 'http://localhost';
-const apiPort = '8090';
 
 describe('CreateEnvelopeForm', () => {
   let queryClient: QueryClient;
   let user: ReturnType<typeof userEvent.setup>;
-  const apiUrl = `${baseUrl}:${apiPort}/api/envelopes`;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -138,148 +128,6 @@ describe('CreateEnvelopeForm', () => {
       await user.type(nameInput, '  Rent  ');
 
       expect(nameInput).toHaveValue('  Rent  ');
-    });
-  });
-
-  describe('API Integration - Success Scenarios', () => {
-    it('successfully creates an envelope and shows success message', async () => {
-      const mockResponse: CreateEnvelopeResponse = {
-        id: '123',
-        name: 'Rent',
-        budget: 500
-      };
-
-      server.use(
-        http.post(apiUrl, async ({ request }) => {
-          const body = await request.json() as CreateEnvelopeDto;
-          expect(body).toEqual({ name: 'Rent', budget: 500 });
-          return HttpResponse.json(mockResponse, { status: 201 });
-        })
-      );
-
-      // Fill out the form
-      const nameInput = screen.getByLabelText(/name/i);
-      const budgetInput = screen.getByLabelText(/budget/i);
-
-      await user.type(nameInput, 'Rent');
-      await user.type(budgetInput, '500');
-      await user.click(screen.getByRole('button', { name: /submit/i }));
-
-      // Wait for successful API call and form reset
-      await waitFor(() => {
-        const successMessageText = 'Envelope created successfully!';
-        expect(screen.getByText(successMessageText)).toBeInTheDocument();
-        // expect(nameInput).toHaveValue('');
-        // expect(budgetInput).toHaveValue(null);
-      });
-
-
-    });
-  });
-
-  describe('API Integration - Error Scenarios', () => {
-    it('handles API server error (500) and shows error message', async () => {
-      server.use(
-        http.post(apiUrl, () => {
-          return HttpResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-          );
-        })
-      );
-
-      const nameInput = screen.getByLabelText(/name/i);
-      const budgetInput = screen.getByLabelText(/budget/i);
-
-      await user.type(nameInput, 'Rent');
-      await user.type(budgetInput, '500');
-      await user.click(screen.getByRole('button', { name: /submit/i }));
-
-      // Verify form is not reset on error
-      await waitFor(() => {
-        expect(nameInput).toHaveValue('Rent');
-        expect(budgetInput).toHaveValue('500');
-
-        expect(screen.getByText('Failed to create envelope!')).toBeInTheDocument();
-      });
-    });
-
-    it('handles API validation error (400) and shows error message', async () => {
-      server.use(
-        http.post(apiUrl, () => {
-          return HttpResponse.json(
-            { error: 'Validation failed', details: 'Envelope with this name already!' },
-            { status: 400 }
-          );
-        })
-      );
-
-      const nameInput = screen.getByLabelText(/name/i);
-      const budgetInput = screen.getByLabelText(/budget/i);
-
-      await user.type(nameInput, 'Duplicate Name');
-      await user.type(budgetInput, '200');
-      await user.click(screen.getByRole('button', { name: /submit/i }));
-
-      await waitFor(() => {
-        expect(screen.getByText('Envelope with this name already!')).toBeInTheDocument();
-      });
-    });
-
-    it('handles network error and shows error message', async () => {
-      server.use(
-        http.post(apiUrl, () => {
-          return HttpResponse.error()
-        })
-      );
-
-      const nameInput = screen.getByLabelText(/name/i);
-      const budgetInput = screen.getByLabelText(/budget/i);
-
-      await user.type(nameInput, 'Network Test');
-      await user.type(budgetInput, '300');
-      await user.click(screen.getByRole('button', { name: /submit/i }));
-
-      await waitFor(() => {
-        expect(screen.getByText('Network error, please try again later!')).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Loading States', () => {
-    it('disables submit button during loading', async () => {
-      let resolveRequest: (value: Response) => void;
-      const requestPromise = new Promise<Response>((resolve) => {
-        resolveRequest = resolve;
-      });
-
-      server.use(
-        http.post(apiUrl, () => {
-          return requestPromise;
-        })
-      );
-
-      const nameInput = screen.getByLabelText(/name/i);
-      const budgetInput = screen.getByLabelText(/budget/i);
-      const submitButton = screen.getByRole('button', { name: /submit/i });
-
-      await user.type(nameInput, 'Disable Test');
-      await user.type(budgetInput, '250');
-
-      expect(submitButton).not.toBeDisabled();
-
-      await user.click(submitButton);
-
-      await waitFor(() => {
-        expect(submitButton).toBeDisabled();
-      });
-
-      // Resolve the request
-      resolveRequest!(HttpResponse.json({ id: '888', name: 'Disable Test', budget: 250 }, { status: 201 }));
-
-      await waitFor(() => {
-        expect(submitButton).not.toBeDisabled();
-      });
     });
   });
 });

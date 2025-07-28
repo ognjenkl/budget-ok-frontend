@@ -8,11 +8,11 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test:contract": "mocha test/pact-tests/*.spec.ts",
-    "test:unit": "vitest run",
+    "test:acceptance": "playwright test",
+    "test:contract": "mocha test/contract/*.spec.ts",
+    "test:component:unit": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.83.0",

@@ -32,8 +32,6 @@ describe('The Envelope API', () => {
     port: apiPort,
   });
 
-
-
   before(async () => {
     await provider.setup();
   });
