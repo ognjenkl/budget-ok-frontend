@@ -1,0 +1,1 @@
+type FetchEnvelopeResponse = {  id: string;  name: string;  budget: number;}export default FetchEnvelopeResponse;

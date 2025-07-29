@@ -33,6 +33,37 @@
         },
         "status": 201
       }
+    },
+    {
+      "description": "a request to get all envelopes with the object pattern",
+      "providerState": "i have an empty list of envelopes",
+      "request": {
+        "method": "GET",
+        "path": "/api/envelopes"
+      },
+      "response": {
+        "body": [
+          {
+            "budget": 150,
+            "id": "1",
+            "name": "Food"
+          },
+          {
+            "budget": 100,
+            "id": "2",
+            "name": "Books"
+          },
+          {
+            "budget": 80,
+            "id": "3",
+            "name": "Transport"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status": 200
+      }
     }
   ],
   "metadata": {
